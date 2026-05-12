@@ -1,32 +1,37 @@
 ---
-name: Feature Request
+name: ✨ Feature Request
 about: Suggest an idea for this project
-title: "[FEATURE] "
+title: "Feature: [Short Description]"
 labels: feature
 assignees: ""
 ---
 
-## Problem Statement
+### 💡 Problem Statement
 
-<!-- Is your feature request related to a problem? Please describe. (e.g., I'm always frustrated when [...]) -->
+_Is your feature request related to a problem? Please describe._  
+Example: "I'm always frustrated when I cannot see the total budget spent in a specific currency."
 
-## Proposed Solution
+### 🚀 Proposed Solution
 
-<!-- A clear and concise description of what you want to happen. -->
+_A clear and concise description of what you want to happen._  
+Example: "Add a currency toggle button on the Dashboard that converts all expense totals into the selected currency using an exchange rate API."
 
-## Alternatives Considered
+### 🔄 Alternatives Considered
 
-<!-- A clear and concise description of any alternative solutions or features you've considered. -->
+_A clear and concise description of any alternative solutions or features you've considered._  
+Example: "Instead of a live API, just allow users to manually input the exchange rate for their trip."
 
-## Additional Context
+### 🎨 Additional Context
 
-<!-- Add any other context or screenshots about the feature request here.
+_Add any other context or screenshots about the feature request here._
 
-If applicable, provide Before/After screenshots or mockups.
+**UI Mockups / Screenshots (if applicable):**
 
-Before (Current UI):
-...
+- [ ] Before (Current UI)
+- [ ] After (Proposed UI mockup)
 
-After (Proposed UI):
-...
--->
+_(Paste images here)_
+
+---
+
+<!-- Thank you for helping improve Travel Planner! -->

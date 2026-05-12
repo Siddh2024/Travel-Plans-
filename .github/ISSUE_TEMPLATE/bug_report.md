@@ -1,38 +1,63 @@
 ---
-name: Bug Report
-about: Create a report to help us improve the project
-title: "[BUG] "
+name: 🐛 Bug Report
+about: Report unexpected behavior or errors
+title: "Bug: [Short Description]"
 labels: bug
 assignees: ""
 ---
 
-## Description
+### 🐞 Describe the Bug
 
-<!-- A clear and concise description of what the bug is. -->
+_A clear, one-sentence summary of the issue._  
+Example: "Logged-in users see a 500 error when accessing the dashboard."
 
-## Steps to Reproduce
+### 🔍 Steps to Reproduce
 
-<!-- Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
-3. Scroll down to '....'
-4. See error -->
+3. Scroll to '....'
+4. See error
 
-## Expected Behavior
+**Example:**
 
-<!-- A clear and concise description of what you expected to happen. -->
+1. Log in as a student
+2. Navigate to /courses/python
+3. Click "Start Exercise" button
+4. Blank screen appears
 
-## Screenshots
+### ✅ Expected vs 🚫 Actual Behavior
 
-<!-- If applicable, add screenshots to help explain your problem.
+- **Expected:** What should happen?  
+  Example: "Exercise instructions should load."
+- **Actual:** What happens instead?  
+  Example: "Blank white screen with console error 'TypeError: undefined'."
 
-Before (Current behavior):
-...
+### 📸 Evidence
 
-After (Expected behavior/Mockup):
-...
--->
+_(Please attach:)_
 
-## Environment Details
+- [ ] Screenshot(s)
+- [ ] Console errors (F12 → Console)
+- [ ] Network logs (F12 → Network)
 
-<!-- Node version, Browser version, OS, etc. -->
+### 💻 Environment
+
+- **Device:** [e.g., iPhone 14, Windows PC]
+- **OS:** [e.g., iOS 16.5, Windows 11]
+- **Browser:** [e.g., Chrome 116, Safari 16]
+
+### 📦 Additional Context
+
+- Does this happen consistently? [Yes/No]
+- Related issues: #[issue-number]
+- Workarounds (if any):
+
+---
+
+**Tip:** Use code blocks for errors:
+
+```bash
+Error: Cannot read property 'id' of undefined (main.js:42)
+```
+
+<!-- Thank you for helping improve Travel Planner! -->
