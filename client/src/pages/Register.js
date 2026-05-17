@@ -74,18 +74,21 @@ const Register = () => {
 
     const newErrors = { ...fieldErrors };
     if (name === "firstName" || name === "lastName") {
+      // Real-time alphabetical name pre-validation
       if (value && (!/^[A-Za-z\s]+$/.test(value) || value.trim().length < 1)) {
         newErrors[name] = "Name can only contain letters and spaces";
       } else {
         newErrors[name] = "";
       }
     } else if (name === "email") {
+      // Real-time strict RFC 5322 email pre-validation
       if (value && !/^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
         newErrors.email = "Please enter a valid email address";
       } else {
         newErrors.email = "";
       }
     } else if (name === "password") {
+      // Real-time strong password complexity pre-validation (min 8 chars, 1 upper, 1 lower, 1 num, 1 special)
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
       if (value && !passwordRegex.test(value)) {
         newErrors.password = "Password must be at least 8 chars with atleast 1 uppercase, 1 lowercase, 1 number, and 1 special char";
@@ -136,6 +139,7 @@ const Register = () => {
     }
   };
 
+  // Dynamically disable Next/Create Account button when step fields are empty or invalid
   const isNextDisabled = () => {
     if (activeStep === 0) {
       return (
