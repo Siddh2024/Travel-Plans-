@@ -36,6 +36,8 @@ import TranslateIcon from "@mui/icons-material/Translate";
 import HotelIcon from "@mui/icons-material/Hotel";
 import PersonIcon from "@mui/icons-material/Person";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { logout } from "../redux/actions/authActions";
 
@@ -86,45 +88,80 @@ const Dashboard = () => {
   };
 
   const drawer = (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        background: "#FFFFFF",
+      }}
+    >
       {/* Logo */}
       <Box
         sx={{
           p: 2.5,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "space-between",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+        <Box
+          component={Link}
+          to="/"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            textDecoration: "none",
+          }}
+        >
           <Box
             sx={{
-              width: 38,
-              height: 38,
-              borderRadius: "10px",
-              background: "linear-gradient(135deg, #1976D2 0%, #00BCD4 100%)",
+              width: 42,
+              height: 42,
+              borderRadius: "12px",
+              background: "linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              boxShadow: "0 6px 20px rgba(20, 184, 166, 0.25)",
             }}
           >
             <ExploreIcon sx={{ color: "white", fontSize: 22 }} />
           </Box>
           <Typography
-            variant="h6"
             sx={{
-              fontWeight: 900,
-              background: "linear-gradient(45deg, #1976D2 30%, #00BCD4 90%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontSize: "1.375rem",
+              fontWeight: 800,
+              color: "#0D1B2A",
               letterSpacing: "-0.5px",
             }}
           >
-            PackGo
+            Pack
+            <Box
+              component="span"
+              sx={{
+                background: "linear-gradient(135deg, #FF6B5A 0%, #FF8A7D 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Go
+            </Box>
           </Typography>
         </Box>
+        <IconButton
+          onClick={handleDrawerToggle}
+          sx={{
+            display: { md: "none" },
+            color: "#64748B",
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
       </Box>
-      <Divider />
+      <Divider sx={{ borderColor: "rgba(13, 27, 42, 0.06)" }} />
 
       {/* User Info */}
       <Box sx={{ p: 2.5 }}>
@@ -133,10 +170,15 @@ const Dashboard = () => {
             display: "flex",
             alignItems: "center",
             gap: 1.5,
-            p: 1.5,
-            borderRadius: 3,
-            bgcolor: "primary.light",
+            p: 1.75,
+            borderRadius: "14px",
+            background: "linear-gradient(135deg, rgba(20, 184, 166, 0.08) 0%, rgba(20, 184, 166, 0.04) 100%)",
+            border: "1px solid rgba(20, 184, 166, 0.12)",
             cursor: "pointer",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              background: "linear-gradient(135deg, rgba(20, 184, 166, 0.12) 0%, rgba(20, 184, 166, 0.06) 100%)",
+            },
           }}
           onClick={() => {
             navigate("/dashboard/profile");
@@ -146,100 +188,142 @@ const Dashboard = () => {
           <Avatar
             alt={user?.name || "User"}
             sx={{
-              width: 42,
-              height: 42,
-              bgcolor: "primary.main",
+              width: 44,
+              height: 44,
+              background: "linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%)",
               fontWeight: 700,
               fontSize: 16,
+              boxShadow: "0 4px 12px rgba(20, 184, 166, 0.25)",
             }}
           >
             {user?.name?.[0]?.toUpperCase() || "U"}
           </Avatar>
           <Box sx={{ flex: 1, overflow: "hidden" }}>
             <Typography
-              variant="subtitle2"
-              sx={{ fontWeight: 700, color: "primary.dark" }}
-              noWrap
+              sx={{
+                fontWeight: 700,
+                color: "#0D1B2A",
+                fontSize: "0.9375rem",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             >
               {user?.name || "Traveler"}
             </Typography>
-            <Typography variant="caption" sx={{ color: "primary.main" }} noWrap>
+            <Typography
+              sx={{
+                color: "#64748B",
+                fontSize: "0.75rem",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
               {user?.email || ""}
             </Typography>
           </Box>
         </Box>
       </Box>
-      <Divider />
+      <Divider sx={{ borderColor: "rgba(13, 27, 42, 0.06)" }} />
 
       {/* Nav Items */}
-      <List sx={{ flexGrow: 1, pt: 1, px: 1 }}>
-        {menuItems.map((item) => (
-          <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
-            <Tooltip title={item.text} placement="right" arrow>
+      <Box sx={{ px: 2, py: 1.5 }}>
+        <Typography
+          sx={{
+            fontSize: "0.7rem",
+            fontWeight: 700,
+            color: "#94A3B8",
+            letterSpacing: "1.5px",
+            textTransform: "uppercase",
+            px: 1.5,
+            mb: 1,
+          }}
+        >
+          Main Menu
+        </Typography>
+        <List sx={{ p: 0 }}>
+          {menuItems.map((item) => (
+            <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
               <ListItemButton
                 component={Link}
                 to={`/dashboard/${item.path}`}
                 onClick={() => setMobileOpen(false)}
                 selected={isActive(item.path)}
                 sx={{
-                  borderRadius: 2.5,
+                  borderRadius: "12px",
+                  py: 1.25,
+                  px: 1.5,
+                  transition: "all 0.2s ease",
                   "&.Mui-selected": {
-                    bgcolor: "primary.main",
+                    background: "linear-gradient(135deg, #FF6B5A 0%, #FF8A7D 100%)",
                     color: "white",
+                    boxShadow: "0 4px 14px rgba(255, 107, 90, 0.3)",
                     "& .MuiListItemIcon-root": { color: "white" },
-                    "&:hover": { bgcolor: "primary.dark" },
+                    "&:hover": {
+                      background: "linear-gradient(135deg, #E8533D 0%, #FF6B5A 100%)",
+                    },
                   },
-                  "&:hover": { bgcolor: "rgba(63, 81, 181, 0.08)" },
+                  "&:hover:not(.Mui-selected)": {
+                    background: "rgba(20, 184, 166, 0.06)",
+                  },
                 }}
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 40,
-                    color: isActive(item.path) ? "white" : "text.secondary",
+                    color: isActive(item.path) ? "white" : "#64748B",
                   }}
                 >
                   {item.icon}
                 </ListItemIcon>
-
                 <ListItemText
                   primary={item.text}
                   primaryTypographyProps={{
                     fontWeight: 600,
-                    fontSize: "0.9rem",
+                    fontSize: "0.875rem",
                   }}
                 />
               </ListItemButton>
-            </Tooltip>
-          </ListItem>
-        ))}
-      </List>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
 
-      <Divider />
-      <List sx={{ px: 1, pb: 1 }}>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={handleLogout}
-            sx={{
-              borderRadius: 2.5,
-              color: "error.main",
-              "&:hover": { bgcolor: "error.light" },
+      <Box sx={{ flexGrow: 1 }} />
+
+      <Divider sx={{ borderColor: "rgba(13, 27, 42, 0.06)" }} />
+      <Box sx={{ p: 2 }}>
+        <ListItemButton
+          onClick={handleLogout}
+          sx={{
+            borderRadius: "12px",
+            py: 1.25,
+            px: 1.5,
+            color: "#EF4444",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              background: "rgba(239, 68, 68, 0.08)",
+            },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 40, color: "#EF4444" }}>
+            <LogoutIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="Logout"
+            primaryTypographyProps={{
+              fontWeight: 600,
+              fontSize: "0.875rem",
             }}
-          >
-            <ListItemIcon sx={{ minWidth: 40, color: "error.main" }}>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Logout"
-              primaryTypographyProps={{ fontWeight: 600, fontSize: "0.9rem" }}
-            />
-          </ListItemButton>
-        </ListItem>
-      </List>
+          />
+        </ListItemButton>
+      </Box>
     </Box>
   );
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh", background: "#F8FAFC" }}>
       <Box
         component="nav"
         sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
@@ -251,7 +335,11 @@ const Dashboard = () => {
           ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: "block", md: "none" },
-            "& .MuiDrawer-paper": { width: drawerWidth },
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              border: "none",
+              boxShadow: "4px 0 24px rgba(13, 27, 42, 0.08)",
+            },
           }}
         >
           {drawer}
@@ -262,9 +350,8 @@ const Dashboard = () => {
             display: { xs: "none", md: "block" },
             "& .MuiDrawer-paper": {
               width: drawerWidth,
-              borderRight: "1px solid",
-              borderColor: "divider",
-              boxShadow: "2px 0 12px rgba(0,0,0,0.04)",
+              border: "none",
+              boxShadow: "1px 0 0 rgba(13, 27, 42, 0.06)",
             },
           }}
           open
@@ -278,44 +365,115 @@ const Dashboard = () => {
         sx={{
           flexGrow: 1,
           width: { md: `calc(100% - ${drawerWidth}px)` },
-          bgcolor: "grey.50",
+          background: "#F8FAFC",
+          minHeight: "100vh",
         }}
       >
         <AppBar
           position="sticky"
-          color="default"
           elevation={0}
           sx={{
-            bgcolor: "background.paper",
-            borderBottom: "1px solid",
-            borderColor: "divider",
+            background: "rgba(248, 250, 252, 0.9)",
+            backdropFilter: "blur(20px)",
+            borderBottom: "1px solid rgba(13, 27, 42, 0.06)",
           }}
         >
-          <Toolbar>
+          <Toolbar sx={{ px: { xs: 2, sm: 3 } }}>
             <IconButton
               color="inherit"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { md: "none" } }}
+              sx={{
+                mr: 2,
+                display: { md: "none" },
+                color: "#0D1B2A",
+              }}
             >
               <MenuIcon />
             </IconButton>
+
+            {/* Search Bar */}
+            <Box
+              sx={{
+                display: { xs: "none", sm: "flex" },
+                alignItems: "center",
+                background: "white",
+                border: "1px solid rgba(13, 27, 42, 0.08)",
+                borderRadius: "12px",
+                px: 2,
+                py: 0.75,
+                flex: 1,
+                maxWidth: 400,
+                transition: "all 0.2s ease",
+                "&:focus-within": {
+                  borderColor: "#14B8A6",
+                  boxShadow: "0 0 0 3px rgba(20, 184, 166, 0.1)",
+                },
+              }}
+            >
+              <SearchIcon sx={{ color: "#94A3B8", mr: 1, fontSize: 20 }} />
+              <input
+                type="text"
+                placeholder="Search trips, destinations..."
+                style={{
+                  border: "none",
+                  outline: "none",
+                  background: "transparent",
+                  fontSize: "0.875rem",
+                  color: "#0D1B2A",
+                  width: "100%",
+                  fontFamily: "inherit",
+                }}
+              />
+            </Box>
+
             <Box sx={{ flexGrow: 1 }} />
+
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Tooltip title="Notifications">
-                <IconButton size="large" color="inherit">
-                  <Badge badgeContent={0} color="error">
-                    <NotificationsIcon />
+                <IconButton
+                  sx={{
+                    color: "#64748B",
+                    background: "white",
+                    border: "1px solid rgba(13, 27, 42, 0.08)",
+                    width: 42,
+                    height: 42,
+                    "&:hover": {
+                      background: "#F8FAFC",
+                      borderColor: "#14B8A6",
+                    },
+                  }}
+                >
+                  <Badge
+                    badgeContent={0}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        background: "linear-gradient(135deg, #FF6B5A 0%, #FF8A7D 100%)",
+                      },
+                    }}
+                  >
+                    <NotificationsIcon sx={{ fontSize: 20 }} />
                   </Badge>
                 </IconButton>
               </Tooltip>
               <Tooltip title="Profile">
-                <IconButton size="large" onClick={handleMenu} color="inherit">
+                <IconButton
+                  onClick={handleMenu}
+                  sx={{
+                    p: 0.5,
+                    border: "2px solid transparent",
+                    borderRadius: "50%",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      borderColor: "#14B8A6",
+                    },
+                  }}
+                >
                   <Avatar
                     alt={user?.name || "User"}
                     sx={{
-                      width: 34,
-                      height: 34,
-                      bgcolor: "primary.main",
+                      width: 38,
+                      height: 38,
+                      background: "linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%)",
                       fontSize: 14,
                       fontWeight: 700,
                     }}
@@ -328,24 +486,68 @@ const Dashboard = () => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                PaperProps={{
+                  sx: {
+                    mt: 1.5,
+                    borderRadius: "16px",
+                    boxShadow: "0 10px 40px rgba(13, 27, 42, 0.12)",
+                    border: "1px solid rgba(13, 27, 42, 0.06)",
+                    minWidth: 180,
+                  },
+                }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
+                <Box sx={{ px: 2, py: 1.5, borderBottom: "1px solid rgba(13, 27, 42, 0.06)" }}>
+                  <Typography sx={{ fontWeight: 700, color: "#0D1B2A", fontSize: "0.9375rem" }}>
+                    {user?.name || "Traveler"}
+                  </Typography>
+                  <Typography sx={{ color: "#64748B", fontSize: "0.75rem" }}>
+                    {user?.email || ""}
+                  </Typography>
+                </Box>
                 <MenuItem
                   onClick={() => {
                     handleClose();
                     navigate("/dashboard/profile");
                   }}
+                  sx={{
+                    py: 1.25,
+                    mx: 1,
+                    my: 0.5,
+                    borderRadius: "8px",
+                    "&:hover": {
+                      background: "rgba(20, 184, 166, 0.06)",
+                    },
+                  }}
                 >
                   <ListItemIcon>
-                    <PersonIcon fontSize="small" />
+                    <PersonIcon fontSize="small" sx={{ color: "#64748B" }} />
                   </ListItemIcon>
-                  Profile
+                  <Typography sx={{ fontSize: "0.875rem", fontWeight: 500 }}>
+                    Profile
+                  </Typography>
                 </MenuItem>
-                <Divider />
-                <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem
+                  onClick={handleLogout}
+                  sx={{
+                    py: 1.25,
+                    mx: 1,
+                    my: 0.5,
+                    borderRadius: "8px",
+                    color: "#EF4444",
+                    "&:hover": {
+                      background: "rgba(239, 68, 68, 0.06)",
+                    },
+                  }}
+                >
                   <ListItemIcon>
-                    <LogoutIcon fontSize="small" sx={{ color: "error.main" }} />
+                    <LogoutIcon fontSize="small" sx={{ color: "#EF4444" }} />
                   </ListItemIcon>
-                  Logout
+                  <Typography sx={{ fontSize: "0.875rem", fontWeight: 500 }}>
+                    Logout
+                  </Typography>
                 </MenuItem>
               </Menu>
             </Box>

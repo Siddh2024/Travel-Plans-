@@ -1,17 +1,56 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   PACKGO - Base Styles
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --midnight: #0D1B2A;
+  --teal: #14B8A6;
+  --coral: #FF6B5A;
+  --slate-50: #F8FAFC;
+}
+
 body {
   margin: 0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--slate-50);
+  color: var(--midnight);
 }
 
 code {
-  font-family:
-    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
 /* Fix: Hide date input placeholder when not focused */
 input[type="date"]:not(:focus)::-webkit-datetime-edit {
   color: transparent;
+}
+
+input[type="date"]:focus::-webkit-datetime-edit {
+  color: var(--midnight);
+}
+
+/* Selection color */
+::selection {
+  background: var(--teal);
+  color: white;
+}
+
+/* Focus outline */
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove default button styles */
+button {
+  font-family: inherit;
 }

@@ -1,12 +1,18 @@
 {
   "dependencies": {
+    "@mui/icons-material": "^9.0.1",
+    "@mui/material": "^9.0.1",
     "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.12.1"
+    "mongoose": "^8.12.1",
+    "react": "^19.2.6",
+    "react-redux": "^9.3.0",
+    "react-router-dom": "^7.15.1",
+    "recharts": "^3.8.1"
   },
   "devDependencies": {
     "husky": "^9.1.7",

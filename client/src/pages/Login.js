@@ -23,6 +23,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import LoginIcon from "@mui/icons-material/Login";
+import ExploreIcon from "@mui/icons-material/Explore";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -65,78 +66,168 @@ const Login = () => {
       sx={{
         minHeight: "100vh",
         display: "flex",
-        backgroundColor: theme.palette.background.default,
+        background: "#F8FAFC",
       }}
     >
-      {/* Left side with image - shown only on desktop */}
+      {/* Left side with premium visual */}
       {!isMobile && (
         <Box
           sx={{
             flex: 1,
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=1887&auto=format&fit=crop)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            background: "linear-gradient(145deg, #0D1B2A 0%, #1B3A5C 45%, #1E4976 100%)",
             position: "relative",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-end",
+            justifyContent: "center",
+            alignItems: "center",
+            overflow: "hidden",
           }}
         >
+          {/* Ambient glow effects */}
           <Box
             sx={{
               position: "absolute",
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.4)",
-              backdropFilter: "blur(2px)",
+              top: "-20%",
+              right: "-10%",
+              width: "60%",
+              height: "140%",
+              background: "radial-gradient(ellipse, rgba(255, 107, 90, 0.12) 0%, transparent 60%)",
+              pointerEvents: "none",
             }}
           />
           <Box
             sx={{
+              position: "absolute",
+              bottom: "-30%",
+              left: "-10%",
+              width: "50%",
+              height: "100%",
+              background: "radial-gradient(ellipse, rgba(20, 184, 166, 0.1) 0%, transparent 60%)",
+              pointerEvents: "none",
+            }}
+          />
+          
+          {/* Content */}
+          <Box
+            sx={{
               position: "relative",
-              p: 6,
-              color: "white",
+              zIndex: 2,
+              textAlign: "center",
+              px: 6,
+              maxWidth: 520,
             }}
           >
+            {/* Logo */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1.5,
+                mb: 4,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: "16px",
+                  background: "linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 10px 30px rgba(20, 184, 166, 0.3)",
+                }}
+              >
+                <ExploreIcon sx={{ color: "white", fontSize: 28 }} />
+              </Box>
+              <Typography
+                sx={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: "2rem",
+                  fontWeight: 800,
+                  color: "white",
+                  letterSpacing: "-0.5px",
+                }}
+              >
+                Pack
+                <Box
+                  component="span"
+                  sx={{
+                    background: "linear-gradient(135deg, #FF6B5A 0%, #FF8A7D 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  Go
+                </Box>
+              </Typography>
+            </Box>
+
             <Typography
               variant="h3"
-              component="h1"
-              sx={{ fontWeight: 700, mb: 2 }}
+              sx={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontWeight: 800,
+                color: "white",
+                mb: 2,
+                fontSize: "2.5rem",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.15,
+              }}
             >
-              PackGo
+              Welcome Back to Your Next Adventure
             </Typography>
-            <Typography variant="h5" sx={{ mb: 4, maxWidth: "80%" }}>
-              Your ultimate companion for discovering and planning your dream
-              adventures
+            
+            <Typography
+              sx={{
+                color: "rgba(248, 250, 252, 0.6)",
+                fontSize: "1.0625rem",
+                lineHeight: 1.8,
+                mb: 4,
+              }}
+            >
+              Sign in to access your personalized travel dashboard, saved trips, and exclusive experiences.
             </Typography>
-            <Box sx={{ display: "flex", gap: 1, mb: 4 }}>
-              <Box
-                sx={{
-                  width: 12,
-                  height: 12,
-                  bgcolor: "white",
-                  borderRadius: "50%",
-                }}
-              />
-              <Box
-                sx={{
-                  width: 12,
-                  height: 12,
-                  bgcolor: "rgba(255, 255, 255, 0.5)",
-                  borderRadius: "50%",
-                }}
-              />
-              <Box
-                sx={{
-                  width: 12,
-                  height: 12,
-                  bgcolor: "rgba(255, 255, 255, 0.5)",
-                  borderRadius: "50%",
-                }}
-              />
+
+            {/* Stats */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 4,
+                pt: 2,
+              }}
+            >
+              {[
+                { value: "2.4K+", label: "Destinations" },
+                { value: "98%", label: "Satisfaction" },
+                { value: "180+", label: "Countries" },
+              ].map((stat, i) => (
+                <Box key={i} sx={{ textAlign: "center" }}>
+                  <Typography
+                    sx={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontSize: "1.75rem",
+                      fontWeight: 800,
+                      background: "linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    {stat.value}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "rgba(248, 250, 252, 0.5)",
+                      fontSize: "0.8rem",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {stat.label}
+                  </Typography>
+                </Box>
+              ))}
             </Box>
           </Box>
         </Box>
@@ -150,36 +241,99 @@ const Login = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          p: 4,
+          p: { xs: 3, sm: 4 },
+          background: "#F8FAFC",
         }}
       >
         <Box
           sx={{
-            maxWidth: 480,
+            maxWidth: 440,
             width: "100%",
           }}
         >
-          <Box sx={{ textAlign: "center", mb: 5 }}>
-            <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
-              Welcome Back
+          {/* Mobile Logo */}
+          {isMobile && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1,
+                mb: 4,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 8px 20px rgba(20, 184, 166, 0.25)",
+                }}
+              >
+                <ExploreIcon sx={{ color: "white", fontSize: 22 }} />
+              </Box>
+              <Typography
+                sx={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: "1.5rem",
+                  fontWeight: 800,
+                  color: "#0D1B2A",
+                }}
+              >
+                Pack
+                <Box
+                  component="span"
+                  sx={{
+                    background: "linear-gradient(135deg, #FF6B5A 0%, #FF8A7D 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  Go
+                </Box>
+              </Typography>
+            </Box>
+          )}
+
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Typography
+              sx={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: "1.875rem",
+                fontWeight: 800,
+                color: "#0D1B2A",
+                mb: 1,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Sign In
             </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Sign in to continue to PackGo
+            <Typography
+              sx={{
+                color: "#64748B",
+                fontSize: "0.9375rem",
+              }}
+            >
+              Enter your credentials to continue
             </Typography>
           </Box>
 
           <Paper
-            elevation={isMobile ? 1 : 0}
+            elevation={0}
             sx={{
               p: 4,
-              borderRadius: 4,
-              border: !isMobile ? "1px solid" : "none",
-              borderColor: "divider",
+              borderRadius: "20px",
+              border: "1px solid rgba(13, 27, 42, 0.08)",
+              background: "white",
+              boxShadow: "0 8px 32px rgba(13, 27, 42, 0.06)",
             }}
           >
             <form onSubmit={handleSubmit}>
               <TextField
-                margin="normal"
                 required
                 fullWidth
                 id="email"
@@ -189,10 +343,20 @@ const Login = () => {
                 autoFocus
                 value={formData.email}
                 onChange={handleChange}
-                sx={{ mb: 3 }}
+                sx={{
+                  mb: 2.5,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#14B8A6",
+                    },
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#14B8A6",
+                  },
+                }}
               />
               <TextField
-                margin="normal"
                 required
                 fullWidth
                 name="password"
@@ -209,6 +373,7 @@ const Login = () => {
                         aria-label="toggle password visibility"
                         onClick={toggleShowPassword}
                         edge="end"
+                        sx={{ color: "#64748B" }}
                       >
                         {showPassword ? (
                           <VisibilityOffIcon />
@@ -219,7 +384,18 @@ const Login = () => {
                     </InputAdornment>
                   ),
                 }}
-                sx={{ mb: 1 }}
+                sx={{
+                  mb: 2,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#14B8A6",
+                    },
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#14B8A6",
+                  },
+                }}
               />
 
               <Box
@@ -235,15 +411,32 @@ const Login = () => {
                     <Checkbox
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      color="primary"
+                      sx={{
+                        color: "#94A3B8",
+                        "&.Mui-checked": {
+                          color: "#14B8A6",
+                        },
+                      }}
                     />
                   }
-                  label="Remember me"
+                  label={
+                    <Typography sx={{ fontSize: "0.875rem", color: "#64748B" }}>
+                      Remember me
+                    </Typography>
+                  }
                 />
                 <Link
                   component={RouterLink}
                   to="/forgot-password"
-                  variant="body2"
+                  sx={{
+                    fontSize: "0.875rem",
+                    fontWeight: 500,
+                    color: "#14B8A6",
+                    textDecoration: "none",
+                    "&:hover": {
+                      color: "#0D9488",
+                    },
+                  }}
                 >
                   Forgot password?
                 </Link>
@@ -254,20 +447,35 @@ const Login = () => {
                 fullWidth
                 variant="contained"
                 size="large"
+                endIcon={<LoginIcon />}
                 sx={{
                   py: 1.5,
                   mb: 3,
-                  borderRadius: 2,
+                  borderRadius: "12px",
                   fontWeight: 600,
+                  fontSize: "0.9375rem",
+                  background: "linear-gradient(135deg, #FF6B5A 0%, #FF8A7D 100%)",
+                  boxShadow: "0 4px 14px rgba(255, 107, 90, 0.3)",
+                  textTransform: "none",
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #E8533D 0%, #FF6B5A 100%)",
+                    boxShadow: "0 8px 25px rgba(255, 107, 90, 0.4)",
+                    transform: "translateY(-1px)",
+                  },
                 }}
-                endIcon={<LoginIcon />}
               >
                 Sign In
               </Button>
 
               <Divider sx={{ my: 3 }}>
-                <Typography variant="body2" color="text.secondary">
-                  OR
+                <Typography
+                  sx={{
+                    fontSize: "0.8125rem",
+                    color: "#94A3B8",
+                    fontWeight: 500,
+                  }}
+                >
+                  OR CONTINUE WITH
                 </Typography>
               </Divider>
 
@@ -275,64 +483,60 @@ const Login = () => {
                 sx={{
                   display: "flex",
                   justifyContent: "center",
-                  gap: 2,
-                  mb: 3,
+                  gap: 1.5,
                 }}
               >
-                <IconButton
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 2,
-                    p: 1.5,
-                    color: "#DB4437",
-                  }}
-                >
-                  <GoogleIcon />
-                </IconButton>
-                <IconButton
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 2,
-                    p: 1.5,
-                    color: "#4267B2",
-                  }}
-                >
-                  <FacebookIcon />
-                </IconButton>
-                <IconButton
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 2,
-                    p: 1.5,
-                    color: "#1DA1F2",
-                  }}
-                >
-                  <TwitterIcon />
-                </IconButton>
+                {[
+                  { icon: <GoogleIcon />, color: "#DB4437" },
+                  { icon: <FacebookIcon />, color: "#4267B2" },
+                  { icon: <TwitterIcon />, color: "#1DA1F2" },
+                ].map((social, i) => (
+                  <IconButton
+                    key={i}
+                    sx={{
+                      width: 52,
+                      height: 52,
+                      border: "1px solid rgba(13, 27, 42, 0.1)",
+                      borderRadius: "12px",
+                      color: social.color,
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        background: `${social.color}10`,
+                        borderColor: social.color,
+                        transform: "translateY(-2px)",
+                      },
+                    }}
+                  >
+                    {social.icon}
+                  </IconButton>
+                ))}
               </Box>
             </form>
           </Paper>
 
           <Box sx={{ mt: 4, textAlign: "center" }}>
-            <Typography variant="body2">
-              Don't have an account?{" "}
+            <Typography sx={{ fontSize: "0.9375rem", color: "#64748B" }}>
+              {"Don't have an account? "}
               <Link
                 component={RouterLink}
                 to="/register"
-                variant="subtitle2"
-                sx={{ fontWeight: 600 }}
+                sx={{
+                  fontWeight: 600,
+                  color: "#14B8A6",
+                  textDecoration: "none",
+                  "&:hover": {
+                    color: "#0D9488",
+                  },
+                }}
               >
-                Get started
+                Get started free
               </Link>
             </Typography>
           </Box>
         </Box>
 
         <Box sx={{ mt: "auto", textAlign: "center", pt: 4 }}>
-          <Typography variant="body2" color="text.secondary">
+          <Typography sx={{ fontSize: "0.8125rem", color: "#94A3B8" }}>
             © {new Date().getFullYear()} PackGo. All rights reserved.
           </Typography>
         </Box>

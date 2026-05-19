@@ -21,8 +21,8 @@ import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import ArrowForwardIcon from "@mui/icons-material/East";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
-
 import HotelIcon from "@mui/icons-material/Hotel";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { getTrips } from "../../redux/actions/tripActions";
 import { getAllUserExpenses } from "../../redux/actions/expenseActions";
 import {
@@ -77,18 +77,8 @@ const DashboardHome = () => {
   // Monthly trip chart data from trips
   const monthlyData = (() => {
     const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
     ];
     const counts = Array(12).fill(0);
     tripsArr.forEach((t) => {
@@ -105,29 +95,62 @@ const DashboardHome = () => {
       icon: <ExploreIcon />,
       label: "Plan New Trip",
       path: "/dashboard/trips",
-      color: "primary.main",
-      bg: "primary.light",
+      gradient: "linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%)",
+      shadow: "0 8px 24px rgba(20, 184, 166, 0.3)",
     },
     {
       icon: <WalletIcon />,
       label: "Track Expenses",
       path: "/dashboard/expenses",
-      color: "success.main",
-      bg: "success.light",
+      gradient: "linear-gradient(135deg, #10B981 0%, #34D399 100%)",
+      shadow: "0 8px 24px rgba(16, 185, 129, 0.3)",
     },
     {
       icon: <WbSunnyIcon />,
       label: "Check Weather",
       path: "/dashboard/weather",
-      color: "warning.main",
-      bg: "warning.light",
+      gradient: "linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)",
+      shadow: "0 8px 24px rgba(245, 158, 11, 0.3)",
     },
     {
       icon: <HotelIcon />,
       label: "Book a Hotel",
       path: "/dashboard/bookings",
-      color: "info.main",
-      bg: "info.light",
+      gradient: "linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)",
+      shadow: "0 8px 24px rgba(59, 130, 246, 0.3)",
+    },
+  ];
+
+  const statsData = [
+    {
+      label: "Total Trips",
+      value: totalTrips,
+      icon: <FlightTakeoffIcon />,
+      gradient: "linear-gradient(135deg, #0D1B2A 0%, #1B3A5C 100%)",
+      shadow: "0 8px 24px rgba(13, 27, 42, 0.2)",
+    },
+    {
+      label: "Completed",
+      value: completedTrips,
+      icon: <CheckCircleIcon />,
+      gradient: "linear-gradient(135deg, #10B981 0%, #34D399 100%)",
+      shadow: "0 8px 24px rgba(16, 185, 129, 0.25)",
+    },
+    {
+      label: "Total Budget",
+      value: `${totalBudget > 0 ? (totalBudget / 1000).toFixed(0) + "K" : "0"}`,
+      prefix: "Rs.",
+      icon: <TrendingUpIcon />,
+      gradient: "linear-gradient(135deg, #FF6B5A 0%, #FF8A7D 100%)",
+      shadow: "0 8px 24px rgba(255, 107, 90, 0.25)",
+    },
+    {
+      label: "Total Spent",
+      value: `${totalSpent > 0 ? (totalSpent / 1000).toFixed(0) + "K" : "0"}`,
+      prefix: "Rs.",
+      icon: <WalletIcon />,
+      gradient: "linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%)",
+      shadow: "0 8px 24px rgba(20, 184, 166, 0.25)",
     },
   ];
 
@@ -135,10 +158,19 @@ const DashboardHome = () => {
     <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
       {/* Greeting */}
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5 }}>
-          Welcome back, {userName}! 👋
+        <Typography
+          sx={{
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontSize: { xs: "1.75rem", sm: "2rem" },
+            fontWeight: 800,
+            color: "#0D1B2A",
+            mb: 0.75,
+            letterSpacing: "-0.02em",
+          }}
+        >
+          Welcome back, {userName}!
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography sx={{ color: "#64748B", fontSize: "1rem" }}>
           {totalTrips === 0
             ? "Start planning your first adventure!"
             : `You have ${plannedTrips} upcoming and ${ongoingTrips} ongoing trips.`}
@@ -147,46 +179,21 @@ const DashboardHome = () => {
 
       {/* Stats Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {[
-          {
-            label: "Total Trips",
-            value: totalTrips,
-            icon: <FlightTakeoffIcon />,
-            color: "primary",
-            bg: "linear-gradient(135deg, #1976D2 0%, #1565C0 100%)",
-          },
-          {
-            label: "Completed",
-            value: completedTrips,
-            icon: <CheckCircleIcon />,
-            color: "success",
-            bg: "linear-gradient(135deg, #4CAF50 0%, #388E3C 100%)",
-          },
-          {
-            label: "Total Budget",
-            value: `₹${totalBudget > 0 ? (totalBudget / 1000).toFixed(0) + "K" : "0"}`,
-            icon: <WalletIcon />,
-            color: "warning",
-            bg: "linear-gradient(135deg, #FF9800 0%, #F57C00 100%)",
-          },
-          {
-            label: "Total Spent",
-            value: `₹${totalSpent > 0 ? (totalSpent / 1000).toFixed(0) + "K" : "0"}`,
-            icon: <WalletIcon />,
-            color: "info",
-            bg: "linear-gradient(135deg, #00BCD4 0%, #0097A7 100%)",
-          },
-        ].map((stat, i) => (
+        {statsData.map((stat, i) => (
           <Grid item xs={6} md={3} key={i}>
             <Paper
               elevation={0}
               sx={{
-                p: 3,
-                borderRadius: 3,
-                background: stat.bg,
+                p: 2.5,
+                borderRadius: "18px",
+                background: stat.gradient,
                 color: "white",
-                transition: "transform 0.2s",
-                "&:hover": { transform: "translateY(-2px)" },
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: stat.shadow,
+                "&:hover": {
+                  transform: "translateY(-4px)",
+                  boxShadow: stat.shadow.replace("24px", "32px"),
+                },
               }}
             >
               <Box
@@ -197,14 +204,40 @@ const DashboardHome = () => {
                 }}
               >
                 <Box>
-                  <Typography variant="body2" sx={{ opacity: 0.85, mb: 0.5 }}>
+                  <Typography
+                    sx={{
+                      opacity: 0.85,
+                      mb: 0.5,
+                      fontSize: "0.75rem",
+                      fontWeight: 600,
+                      letterSpacing: "0.5px",
+                      textTransform: "uppercase",
+                    }}
+                  >
                     {stat.label}
                   </Typography>
-                  <Typography variant="h4" fontWeight={800}>
+                  <Typography
+                    sx={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontSize: { xs: "1.5rem", sm: "1.875rem" },
+                      fontWeight: 800,
+                      letterSpacing: "-0.02em",
+                    }}
+                  >
+                    {stat.prefix && (
+                      <Box component="span" sx={{ fontSize: "0.875rem", fontWeight: 600, mr: 0.5 }}>
+                        {stat.prefix}
+                      </Box>
+                    )}
                     {stat.value}
                   </Typography>
                 </Box>
-                <Box sx={{ opacity: 0.7, "& svg": { fontSize: 32 } }}>
+                <Box
+                  sx={{
+                    opacity: 0.6,
+                    "& svg": { fontSize: { xs: 28, sm: 32 } },
+                  }}
+                >
                   {stat.icon}
                 </Box>
               </Box>
@@ -220,13 +253,21 @@ const DashboardHome = () => {
             elevation={0}
             sx={{
               p: 3,
-              borderRadius: 3,
-              border: "1px solid",
-              borderColor: "divider",
-              mb: { xs: 3, md: 0 },
+              borderRadius: "20px",
+              border: "1px solid rgba(13, 27, 42, 0.06)",
+              background: "white",
+              height: "100%",
             }}
           >
-            <Typography variant="h6" fontWeight={700} mb={2}>
+            <Typography
+              sx={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontWeight: 700,
+                color: "#0D1B2A",
+                mb: 2.5,
+                fontSize: "1.125rem",
+              }}
+            >
               Quick Actions
             </Typography>
             <Grid container spacing={1.5}>
@@ -237,38 +278,43 @@ const DashboardHome = () => {
                     component={Link}
                     to={action.path}
                     sx={{
-                      p: 2.5,
-                      borderRadius: 3,
+                      p: 2.25,
+                      borderRadius: "16px",
                       textDecoration: "none",
                       display: "block",
-                      border: "1px solid",
-                      borderColor: "divider",
-                      transition: "all 0.2s",
+                      border: "1px solid rgba(13, 27, 42, 0.06)",
+                      background: "white",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       "&:hover": {
-                        boxShadow: 4,
-                        transform: "translateY(-2px)",
+                        boxShadow: "0 12px 32px rgba(13, 27, 42, 0.1)",
+                        transform: "translateY(-4px)",
+                        borderColor: "transparent",
                       },
                     }}
                   >
                     <Box
                       sx={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 2.5,
-                        bgcolor: action.bg,
-                        color: action.color,
+                        width: 48,
+                        height: 48,
+                        borderRadius: "14px",
+                        background: action.gradient,
+                        boxShadow: action.shadow,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         mb: 1.5,
+                        color: "white",
+                        "& svg": { fontSize: 24 },
                       }}
                     >
                       {action.icon}
                     </Box>
                     <Typography
-                      variant="body2"
-                      fontWeight={700}
-                      color="text.primary"
+                      sx={{
+                        fontWeight: 600,
+                        color: "#0D1B2A",
+                        fontSize: "0.875rem",
+                      }}
                     >
                       {action.label}
                     </Typography>
@@ -285,38 +331,63 @@ const DashboardHome = () => {
             elevation={0}
             sx={{
               p: 3,
-              borderRadius: 3,
-              border: "1px solid",
-              borderColor: "divider",
+              borderRadius: "20px",
+              border: "1px solid rgba(13, 27, 42, 0.06)",
+              background: "white",
+              height: "100%",
             }}
           >
-            <Typography variant="h6" fontWeight={700} mb={2}>
+            <Typography
+              sx={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontWeight: 700,
+                color: "#0D1B2A",
+                mb: 2.5,
+                fontSize: "1.125rem",
+              }}
+            >
               Trips by Month
             </Typography>
             {monthlyData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={200}>
+              <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={monthlyData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <defs>
+                    <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#14B8A6" />
+                      <stop offset="100%" stopColor="#2DD4BF" />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="rgba(13, 27, 42, 0.06)"
+                    vertical={false}
+                  />
                   <XAxis
                     dataKey="month"
                     axisLine={false}
                     tickLine={false}
-                    style={{ fontSize: 12 }}
+                    tick={{ fontSize: 12, fill: "#64748B", fontWeight: 500 }}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
                     allowDecimals={false}
-                    style={{ fontSize: 12 }}
+                    tick={{ fontSize: 12, fill: "#64748B", fontWeight: 500 }}
                   />
                   <Tooltip
                     contentStyle={{
-                      borderRadius: 8,
-                      border: "1px solid #e0e0e0",
+                      borderRadius: 12,
+                      border: "1px solid rgba(13, 27, 42, 0.08)",
+                      boxShadow: "0 8px 24px rgba(13, 27, 42, 0.12)",
+                      fontWeight: 600,
                     }}
                     formatter={(v) => [v, "Trips"]}
                   />
-                  <Bar dataKey="trips" fill="#1976D2" radius={[6, 6, 0, 0]} />
+                  <Bar
+                    dataKey="trips"
+                    fill="url(#barGradient)"
+                    radius={[8, 8, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -325,13 +396,25 @@ const DashboardHome = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  height: 200,
+                  height: 220,
                   flexDirection: "column",
-                  gap: 1,
+                  gap: 1.5,
                 }}
               >
-                <ExploreIcon sx={{ fontSize: 48, color: "text.disabled" }} />
-                <Typography color="text.secondary">
+                <Box
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: "16px",
+                    background: "rgba(20, 184, 166, 0.08)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ExploreIcon sx={{ fontSize: 32, color: "#14B8A6" }} />
+                </Box>
+                <Typography sx={{ color: "#64748B", fontWeight: 500 }}>
                   Create trips to see analytics
                 </Typography>
               </Box>
@@ -347,47 +430,104 @@ const DashboardHome = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            mb: 2.5,
+            mb: 3,
           }}
         >
-          <Typography variant="h6" fontWeight={700}>
+          <Typography
+            sx={{
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontWeight: 700,
+              color: "#0D1B2A",
+              fontSize: "1.25rem",
+            }}
+          >
             {upcomingTrips.length > 0 ? "Upcoming Trips" : "Recent Trips"}
           </Typography>
           <Button
             component={Link}
             to="/dashboard/trips"
             endIcon={<ArrowForwardIcon />}
-            color="primary"
+            sx={{
+              color: "#14B8A6",
+              fontWeight: 600,
+              textTransform: "none",
+              "&:hover": {
+                background: "rgba(20, 184, 166, 0.06)",
+              },
+            }}
           >
             View All
           </Button>
         </Box>
 
         {loading ? (
-          <LinearProgress sx={{ borderRadius: 2 }} />
+          <LinearProgress
+            sx={{
+              borderRadius: "8px",
+              background: "rgba(20, 184, 166, 0.1)",
+              "& .MuiLinearProgress-bar": {
+                background: "linear-gradient(90deg, #14B8A6, #2DD4BF)",
+              },
+            }}
+          />
         ) : tripsArr.length === 0 ? (
           <Paper
             elevation={0}
             sx={{
               p: 5,
               textAlign: "center",
-              borderRadius: 3,
-              border: "2px dashed",
-              borderColor: "divider",
+              borderRadius: "20px",
+              border: "2px dashed rgba(13, 27, 42, 0.12)",
+              background: "white",
             }}
           >
-            <FlightTakeoffIcon
-              sx={{ fontSize: 56, color: "text.disabled", mb: 2 }}
-            />
-            <Typography variant="h6" color="text.secondary" gutterBottom>
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                borderRadius: "20px",
+                background: "linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(20, 184, 166, 0.05) 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mx: "auto",
+                mb: 2.5,
+              }}
+            >
+              <FlightTakeoffIcon sx={{ fontSize: 40, color: "#14B8A6" }} />
+            </Box>
+            <Typography
+              sx={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontWeight: 700,
+                color: "#0D1B2A",
+                mb: 1,
+                fontSize: "1.125rem",
+              }}
+            >
               No trips yet
+            </Typography>
+            <Typography sx={{ color: "#64748B", mb: 3 }}>
+              Start planning your first adventure!
             </Typography>
             <Button
               component={Link}
               to="/dashboard/trips"
               variant="contained"
               startIcon={<AddIcon />}
-              sx={{ mt: 1 }}
+              sx={{
+                background: "linear-gradient(135deg, #FF6B5A 0%, #FF8A7D 100%)",
+                boxShadow: "0 4px 14px rgba(255, 107, 90, 0.3)",
+                borderRadius: "12px",
+                fontWeight: 600,
+                textTransform: "none",
+                px: 3,
+                py: 1.25,
+                "&:hover": {
+                  background: "linear-gradient(135deg, #E8533D 0%, #FF6B5A 100%)",
+                  boxShadow: "0 8px 25px rgba(255, 107, 90, 0.4)",
+                },
+              }}
             >
               Plan Your First Trip
             </Button>
@@ -402,18 +542,23 @@ const DashboardHome = () => {
                 <Card
                   elevation={0}
                   sx={{
-                    borderRadius: 3,
-                    border: "1px solid",
-                    borderColor: "divider",
-                    transition: "transform 0.2s, box-shadow 0.2s",
-                    "&:hover": { transform: "translateY(-4px)", boxShadow: 6 },
+                    borderRadius: "20px",
+                    border: "1px solid rgba(13, 27, 42, 0.06)",
+                    background: "white",
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    overflow: "hidden",
+                    "&:hover": {
+                      transform: "translateY(-6px)",
+                      boxShadow: "0 20px 48px rgba(13, 27, 42, 0.12)",
+                      borderColor: "transparent",
+                    },
                   }}
                 >
                   <CardActionArea
                     component={Link}
                     to={`/dashboard/trips/${trip._id}`}
                   >
-                    <Box sx={{ position: "relative", pt: "50%" }}>
+                    <Box sx={{ position: "relative", pt: "56%" }}>
                       <Box
                         component="img"
                         src={
@@ -428,9 +573,17 @@ const DashboardHome = () => {
                           width: "100%",
                           height: "100%",
                           objectFit: "cover",
+                          transition: "transform 0.6s ease",
                         }}
                       />
-                      <Box sx={{ position: "absolute", top: 10, right: 10 }}>
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          inset: 0,
+                          background: "linear-gradient(180deg, transparent 40%, rgba(13, 27, 42, 0.6) 100%)",
+                        }}
+                      />
+                      <Box sx={{ position: "absolute", top: 12, right: 12 }}>
                         <Chip
                           label={
                             trip.status?.charAt(0).toUpperCase() +
@@ -438,29 +591,45 @@ const DashboardHome = () => {
                           }
                           color={STATUS_COLORS[trip.status] || "default"}
                           size="small"
-                          sx={{ fontWeight: 700 }}
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: "0.7rem",
+                            borderRadius: "8px",
+                            backdropFilter: "blur(10px)",
+                          }}
                         />
                       </Box>
                     </Box>
-                    <CardContent>
-                      <Typography variant="h6" fontWeight={700}>
+                    <CardContent sx={{ p: 2.5 }}>
+                      <Typography
+                        sx={{
+                          fontFamily: "'Plus Jakarta Sans', sans-serif",
+                          fontWeight: 700,
+                          color: "#0D1B2A",
+                          fontSize: "1.125rem",
+                          mb: 0.75,
+                        }}
+                      >
                         {trip.destination}
                       </Typography>
                       <Box
                         sx={{
                           display: "flex",
                           alignItems: "center",
-                          gap: 0.5,
-                          mt: 0.5,
+                          gap: 0.75,
                         }}
                       >
-                        <DateRangeIcon fontSize="small" color="action" />
-                        <Typography variant="body2" color="text.secondary">
+                        <DateRangeIcon
+                          sx={{ fontSize: 16, color: "#64748B" }}
+                        />
+                        <Typography
+                          sx={{ color: "#64748B", fontSize: "0.8125rem" }}
+                        >
                           {new Date(trip.startDate).toLocaleDateString(
                             "en-IN",
                             { day: "2-digit", month: "short" },
                           )}{" "}
-                          –{" "}
+                          -{" "}
                           {new Date(trip.endDate).toLocaleDateString("en-IN", {
                             day: "2-digit",
                             month: "short",
