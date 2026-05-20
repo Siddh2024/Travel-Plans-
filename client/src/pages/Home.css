@@ -546,6 +546,10 @@
 }
 
 .wander-feat-icon {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -971,5 +975,11 @@
 
   .wander-cta-actions {
     flex-direction: column;
+    width: 100%;
+  }
+  .wander-btn-primary,
+  .wander-btn-ghost {
+    width: 100%;
+    text-align: center;
   }
 }
