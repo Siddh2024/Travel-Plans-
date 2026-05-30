@@ -43,6 +43,8 @@ import {
 } from "../../redux/actions/expenseActions";
 import { getTrips } from "../../redux/actions/tripActions";
 import PrimaryButton from "../../components/PrimaryButton";
+import * as XLSX from "xlsx";
+import Menu from "@mui/material/Menu";
 
 const EXPENSE_CATEGORIES = [
   "Accommodation",
@@ -80,6 +82,17 @@ const ExpensesView = () => {
   const [activeTripId, setActiveTripId] = useState("");
   const [open, setOpen] = useState(false);
   const [amountError, setAmountError] = useState("");
+
+  const [exportAnchorEl, setExportAnchorEl] = useState(null);
+
+  const handleExportMenuOpen = (event) => {
+    setExportAnchorEl(event.currentTarget);
+  };
+
+  const handleExportMenuClose = () => {
+    setExportAnchorEl(null);
+  };
+
   const [form, setForm] = useState({
     amount: "",
     category: "Food",
@@ -202,6 +215,33 @@ const ExpensesView = () => {
     URL.revokeObjectURL(url);
   };
 
+  const handleExportExcel = () => {
+    if (!expenses || expenses.length === 0) {
+      alert("No expenses to export!");
+      return;
+    }
+
+    const data = expenses.map((e) => ({
+      Date: new Date(e.date).toLocaleDateString(),
+      Category: e.category,
+      Description: e.description || "",
+      Amount: e.amount,
+      Currency: e.currency,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Expenses");
+
+    XLSX.writeFile(
+      workbook,
+      `expenses_${activeTrip?.destination || "trip"}.xlsx`,
+    );
+
+    handleExportMenuClose();
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       {/* Header */}
@@ -222,16 +262,37 @@ const ExpensesView = () => {
           </Typography>
         </Box>
         <Box sx={{ display: "flex", gap: 1 }}>
-          <Tooltip title="Export CSV">
-            <Button
-              variant="outlined"
-              startIcon={<DownloadIcon />}
-              onClick={handleExportCSV}
-              disabled={!activeTripId || !expenses || expenses.length === 0} // ← ADD THIS
-              sx={{ borderRadius: 3 }}
-            >
-              Export
-            </Button>
+          <Tooltip title="Export Expenses">
+            <>
+              <Button
+                variant="outlined"
+                startIcon={<DownloadIcon />}
+                onClick={handleExportMenuOpen}
+                disabled={!activeTripId || !expenses || expenses.length === 0}
+                sx={{ borderRadius: 3 }}
+              >
+                Export
+              </Button>
+
+              <Menu
+                anchorEl={exportAnchorEl}
+                open={Boolean(exportAnchorEl)}
+                onClose={handleExportMenuClose}
+              >
+                <MenuItem
+                  onClick={() => {
+                    handleExportCSV();
+                    handleExportMenuClose();
+                  }}
+                >
+                  Export CSV
+                </MenuItem>
+
+                <MenuItem onClick={handleExportExcel}>
+                  Export Excel (.xlsx)
+                </MenuItem>
+              </Menu>
+            </>
           </Tooltip>
           <PrimaryButton
             startIcon={<AddIcon />}
