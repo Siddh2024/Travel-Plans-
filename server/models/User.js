@@ -72,6 +72,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+      baseCurrency: {
+    type: String,
+    default: "INR",
+  },
   },
   {
     toJSON: {
@@ -84,11 +88,6 @@ const UserSchema = new mongoose.Schema(
     },
   },
 );
-  baseCurrency: {
-    type: String,
-    default: "INR",
-  },
-});
 
 // Hash the password before saving
 UserSchema.pre("save", async function (next) {
