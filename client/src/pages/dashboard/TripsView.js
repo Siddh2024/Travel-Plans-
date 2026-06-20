@@ -24,8 +24,12 @@ import AddIcon from "@mui/icons-material/Add";
 import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import WalletIcon from "@mui/icons-material/Wallet";
+import PrimaryButton from "../../components/PrimaryButton";
 import { getTrips, addTrip } from "../../redux/actions/tripActions";
 import api from "../../services/api";
+import ShowMoreList from "../../components/ShowMoreList";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const STATUS_COLORS = {
   planned: "primary",
@@ -72,6 +76,13 @@ const TripsView = () => {
     }
   };
 
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  const tripsInitialCount = isMobile ? 2 : isTablet ? 4 : 6;
+
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -79,6 +90,14 @@ const TripsView = () => {
     e.preventDefault();
     if (!formData.destination || !formData.startDate || !formData.endDate)
       return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (new Date(formData.startDate) < today) {
+      alert("Trip start date cannot be in the past!");
+      return;
+    }
+
     dispatch(
       addTrip({ ...formData, budget: parseFloat(formData.budget) || 0 }),
     );
@@ -117,15 +136,13 @@ const TripsView = () => {
             {trips?.length || 0} trips so far
           </Typography>
         </Box>
-        <Button
-          variant="contained"
-          color="primary"
+        <PrimaryButton
           startIcon={<AddIcon />}
           onClick={() => setOpen(true)}
           sx={{ borderRadius: 3, px: 3 }}
         >
           New Trip
-        </Button>
+        </PrimaryButton>
       </Box>
 
       {/* Filter Chips */}
@@ -176,46 +193,59 @@ const TripsView = () => {
                   {...params}
                   label="Destination *"
                   name="destination"
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <React.Fragment>
-                        {loadingOpts ? (
-                          <CircularProgress color="inherit" size={20} />
-                        ) : null}
-                        {params.InputProps.endAdornment}
-                      </React.Fragment>
-                    ),
+                  slotProps={{
+                    ...params.slotProps,
+                    input: {
+                      ...params.slotProps?.input,
+                      endAdornment: (
+                        <React.Fragment>
+                          {loadingOpts ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.slotProps?.input?.endAdornment}
+                        </React.Fragment>
+                      ),
+                    },
                   }}
                 />
               )}
             />
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid xs={6}>
                 <TextField
                   fullWidth
                   name="startDate"
                   label="Start Date *"
                   type="date"
-                  InputLabelProps={{ shrink: true }}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    htmlInput: { min: new Date().toISOString().split("T")[0] },
+                  }}
                   value={formData.startDate}
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid xs={6}>
                 <TextField
                   fullWidth
                   name="endDate"
                   label="End Date *"
                   type="date"
-                  InputLabelProps={{ shrink: true }}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    htmlInput: {
+                      min:
+                        formData.startDate ||
+                        new Date().toISOString().split("T")[0],
+                    },
+                  }}
                   value={formData.endDate}
                   onChange={handleChange}
                 />
               </Grid>
             </Grid>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid xs={6}>
                 <TextField
                   fullWidth
                   name="budget"
@@ -225,7 +255,7 @@ const TripsView = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid xs={6}>
                 <TextField
                   fullWidth
                   select
@@ -255,133 +285,185 @@ const TripsView = () => {
           <Button onClick={() => setOpen(false)} color="inherit">
             Cancel
           </Button>
-          <Button
-            onClick={handleSubmit}
-            variant="contained"
-            color="primary"
-            sx={{ px: 3 }}
-          >
+          <PrimaryButton onClick={handleSubmit} sx={{ px: 3 }}>
             Create Trip
-          </Button>
+          </PrimaryButton>
         </DialogActions>
       </Dialog>
 
       {/* Trips Grid */}
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 2, md: 3 }}>
         {loading ? (
           Array.from({ length: 3 }).map((_, i) => (
-            <Grid item xs={12} md={6} lg={4} key={i}>
+            <Grid xs={12} md={6} lg={4} key={i}>
               <Paper sx={{ height: 280, borderRadius: 4 }} elevation={0} />
             </Grid>
           ))
         ) : filteredTrips.length > 0 ? (
-          filteredTrips.map((trip) => {
-            const days =
-              trip.startDate && trip.endDate
-                ? Math.ceil(
-                    (new Date(trip.endDate) - new Date(trip.startDate)) /
-                      (1000 * 60 * 60 * 24),
-                  )
-                : 0;
-            return (
-              <Grid item xs={12} md={6} lg={4} key={trip._id}>
-                <Card
-                  elevation={0}
-                  sx={{
-                    borderRadius: 4,
-                    border: "1px solid",
-                    borderColor: "divider",
-                    overflow: "hidden",
-                    transition: "transform 0.25s, box-shadow 0.25s",
-                    "&:hover": { transform: "translateY(-4px)", boxShadow: 6 },
-                  }}
+          <ShowMoreList
+            items={filteredTrips}
+            initialCount={tripsInitialCount}
+            itemLabel="Trips"
+            renderItem={(trip) => {
+              const days =
+                trip.startDate && trip.endDate
+                  ? Math.ceil(
+                      (new Date(trip.endDate) - new Date(trip.startDate)) /
+                        (1000 * 60 * 60 * 24),
+                    )
+                  : 0;
+
+              return (
+                <Grid
+                  xs={12}
+                  md={6}
+                  lg={4}
+                  key={trip._id}
+                  sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <CardActionArea
-                    onClick={() => navigate(`/dashboard/trips/${trip._id}`)}
+                  <Card
+                    elevation={0}
+                    sx={{
+                      width: { xs: "100%", sm: 220, md: 240, lg: 260 },
+                      maxWidth: 260,
+                      minWidth: 0,
+                      flex: "0 0 auto",
+                      aspectRatio: "1 / 1",
+                      display: "flex",
+                      flexDirection: "column",
+                      borderRadius: 4,
+                      border: "1px solid",
+                      borderColor: "divider",
+                      overflow: "hidden",
+                      transition: "transform 0.25s, box-shadow 0.25s",
+                      "&:hover": {
+                        transform: "translateY(-4px)",
+                        boxShadow: 6,
+                      },
+                    }}
                   >
-                    <Box sx={{ position: "relative", pt: "55%" }}>
-                      <Box
-                        component="img"
-                        src={
-                          trip.images && trip.images.length > 0
-                            ? trip.images[0]
-                            : "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?fit=crop&w=600"
-                        }
-                        alt={trip.destination}
-                        sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                      <Box sx={{ position: "absolute", top: 12, right: 12 }}>
-                        <Chip
-                          label={
-                            trip.status?.charAt(0).toUpperCase() +
-                            trip.status?.slice(1)
-                          }
-                          color={STATUS_COLORS[trip.status] || "default"}
-                          size="small"
-                          sx={{ fontWeight: 700 }}
-                        />
-                      </Box>
-                    </Box>
-                    <CardContent sx={{ pb: "12px !important" }}>
-                      <Typography variant="h6" fontWeight={700} gutterBottom>
-                        {trip.destination}
-                      </Typography>
+                    <CardActionArea
+                      onClick={() => navigate(`/dashboard/trips/${trip._id}`)}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "stretch",
+                      }}
+                    >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 0.5,
-                          mb: 1,
+                          position: "relative",
+                          height: "50%",
+                          flexShrink: 0,
                         }}
                       >
-                        <DateRangeIcon fontSize="small" color="action" />
-                        <Typography variant="body2" color="text.secondary">
-                          {new Date(trip.startDate).toLocaleDateString(
-                            "en-IN",
-                            { day: "2-digit", month: "short" },
-                          )}{" "}
-                          →{" "}
-                          {new Date(trip.endDate).toLocaleDateString("en-IN", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                          {days > 0 && ` (${days}d)`}
-                        </Typography>
+                        <Box
+                          component="img"
+                          src={
+                            trip.images && trip.images.length > 0
+                              ? trip.images[0]
+                              : "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?fit=crop&w=600"
+                          }
+                          alt={trip.destination}
+                          sx={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            display: "block",
+                          }}
+                        />
+                        <Box sx={{ position: "absolute", top: 12, right: 12 }}>
+                          <Chip
+                            label={
+                              trip.status?.charAt(0).toUpperCase() +
+                              trip.status?.slice(1)
+                            }
+                            color={STATUS_COLORS[trip.status] || "default"}
+                            size="small"
+                            sx={{ fontWeight: 700 }}
+                          />
+                        </Box>
                       </Box>
-                      {trip.budget > 0 && (
+                      <CardContent
+                        sx={{
+                          flex: 1,
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                          overflow: "hidden",
+                          pb: "12px !important",
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          fontWeight={700}
+                          gutterBottom
+                          noWrap
+                        >
+                          {trip.destination}
+                        </Typography>
                         <Box
                           sx={{
                             display: "flex",
                             alignItems: "center",
                             gap: 0.5,
+                            mb: 1,
+                            flexWrap: "wrap",
                           }}
                         >
-                          <WalletIcon fontSize="small" color="success" />
+                          <DateRangeIcon fontSize="small" color="action" />
                           <Typography
                             variant="body2"
-                            color="success.main"
-                            fontWeight={600}
+                            color="text.secondary"
+                            noWrap
                           >
-                            Budget: ₹{trip.budget.toLocaleString()}
+                            {new Date(trip.startDate).toLocaleDateString(
+                              "en-IN",
+                              { day: "2-digit", month: "short" },
+                            )}{" "}
+                            →{" "}
+                            {new Date(trip.endDate).toLocaleDateString(
+                              "en-IN",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )}
+                            {days > 0 && ` (${days}d)`}
                           </Typography>
                         </Box>
-                      )}
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            );
-          })
+                        {trip.budget > 0 && (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                              flexWrap: "wrap",
+                            }}
+                          >
+                            <WalletIcon fontSize="small" color="success" />
+                            <Typography
+                              variant="body2"
+                              color="success.main"
+                              fontWeight={600}
+                              noWrap
+                            >
+                              Budget: ₹{trip.budget.toLocaleString()}
+                            </Typography>
+                          </Box>
+                        )}
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              );
+            }}
+          />
         ) : (
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Paper
               sx={{
                 p: 6,
@@ -398,14 +480,13 @@ const TripsView = () => {
               <Typography variant="h6" color="text.secondary" gutterBottom>
                 {filter === "all" ? "No trips yet!" : `No ${filter} trips`}
               </Typography>
-              <Button
-                variant="contained"
+              <PrimaryButton
                 startIcon={<AddIcon />}
                 onClick={() => setOpen(true)}
                 sx={{ mt: 1 }}
               >
                 Plan Your First Trip
-              </Button>
+              </PrimaryButton>
             </Paper>
           </Grid>
         )}

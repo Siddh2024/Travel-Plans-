@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/actions/authActions";
+import { googleLogin, login } from "../redux/actions/authActions";
+import { GoogleLogin } from "@react-oauth/google";
 import {
   Box,
   TextField,
-  Button,
   Typography,
   Paper,
   Link,
@@ -19,10 +19,57 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
+
 import LoginIcon from "@mui/icons-material/Login";
+import PrimaryButton from "../components/PrimaryButton";
+
+/**
+ * Renders the Google Sign-In button and surrounding OR divider.
+ * Uses a ResizeObserver to measure available container width so that
+ * the GoogleLogin iframe never overflows its parent on any viewport.
+ */
+const GoogleAuthSection = ({ onSuccess }) => {
+  const containerRef = useRef(null);
+  const [buttonWidth, setButtonWidth] = useState(null);
+
+  const updateWidth = useCallback(() => {
+    if (containerRef.current) {
+      setButtonWidth(Math.floor(containerRef.current.clientWidth));
+    }
+  }, []);
+
+  useEffect(() => {
+    updateWidth();
+    const observer = new ResizeObserver(updateWidth);
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [updateWidth]);
+
+  return (
+    <>
+      <Divider sx={{ my: 3 }}>
+        <Typography variant="body2" color="text.secondary">
+          OR
+        </Typography>
+      </Divider>
+
+      {/* Container measured so we can feed exact px width to GoogleLogin */}
+      <Box ref={containerRef} sx={{ width: "100%", overflow: "hidden", mb: 3 }}>
+        {buttonWidth !== null && (
+          <GoogleLogin
+            theme="outlined"
+            width={buttonWidth}
+            shape="pill"
+            text="continue_with"
+            size="large"
+            onSuccess={onSuccess}
+            onError={() => console.log("Google Login failed")}
+          />
+        )}
+      </Box>
+    </>
+  );
+};
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -56,7 +103,6 @@ const Login = () => {
     });
 
     if (name === "email") {
-      // Real-time strict RFC 5322 email pre-validation for login inputs
       if (
         value &&
         !/^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
@@ -102,7 +148,6 @@ const Login = () => {
     return isValid;
   };
 
-  // Dynamically disable Sign In button when email or password fields are empty or invalid
   const isSignInDisabled = () => {
     return (
       !formData.email ||
@@ -117,8 +162,12 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      dispatch(login(formData));
+      dispatch(login(formData, navigate));
     }
+  };
+
+  const handleGoogleSuccess = (CredentialResponse) => {
+    dispatch(googleLogin(CredentialResponse, navigate));
   };
 
   return (
@@ -129,7 +178,6 @@ const Login = () => {
         backgroundColor: theme.palette.background.default,
       }}
     >
-      {/* Left side with image - shown only on desktop */}
       {!isMobile && (
         <Box
           sx={{
@@ -138,7 +186,10 @@ const Login = () => {
               "url(https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=1887&auto=format&fit=crop)",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            position: "relative",
+            position: "sticky",
+            top: 0,
+            height: "100vh",
+            alignSelf: "flex-start",
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-end",
@@ -155,13 +206,7 @@ const Login = () => {
               backdropFilter: "blur(2px)",
             }}
           />
-          <Box
-            sx={{
-              position: "relative",
-              p: 6,
-              color: "white",
-            }}
-          >
+          <Box sx={{ position: "relative", p: 6, color: "white" }}>
             <Typography
               variant="h3"
               component="h1"
@@ -173,37 +218,10 @@ const Login = () => {
               Your ultimate companion for discovering and planning your dream
               adventures
             </Typography>
-            <Box sx={{ display: "flex", gap: 1, mb: 4 }}>
-              <Box
-                sx={{
-                  width: 12,
-                  height: 12,
-                  bgcolor: "white",
-                  borderRadius: "50%",
-                }}
-              />
-              <Box
-                sx={{
-                  width: 12,
-                  height: 12,
-                  bgcolor: "rgba(255, 255, 255, 0.5)",
-                  borderRadius: "50%",
-                }}
-              />
-              <Box
-                sx={{
-                  width: 12,
-                  height: 12,
-                  bgcolor: "rgba(255, 255, 255, 0.5)",
-                  borderRadius: "50%",
-                }}
-              />
-            </Box>
           </Box>
         </Box>
       )}
 
-      {/* Right side with login form */}
       <Box
         sx={{
           flex: 1,
@@ -214,12 +232,7 @@ const Login = () => {
           p: 4,
         }}
       >
-        <Box
-          sx={{
-            maxWidth: 480,
-            width: "100%",
-          }}
-        >
+        <Box sx={{ maxWidth: 480, width: "100%" }}>
           <Box sx={{ textAlign: "center", mb: 5 }}>
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
               Welcome Back
@@ -267,22 +280,24 @@ const Login = () => {
                 onChange={handleChange}
                 error={!!errors.password}
                 helperText={errors.password}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={toggleShowPassword}
-                        edge="end"
-                      >
-                        {showPassword ? (
-                          <VisibilityOffIcon />
-                        ) : (
-                          <VisibilityIcon />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={toggleShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
                 }}
                 sx={{ mb: 1 }}
               />
@@ -314,71 +329,18 @@ const Login = () => {
                 </Link>
               </Box>
 
-              <Button
+              <PrimaryButton
                 type="submit"
                 fullWidth
-                variant="contained"
                 size="large"
                 disabled={isSignInDisabled()}
-                sx={{
-                  py: 1.5,
-                  mb: 3,
-                  borderRadius: 2,
-                  fontWeight: 600,
-                }}
+                sx={{ py: 1.5, mb: 3, borderRadius: 2, fontWeight: 600 }}
                 endIcon={<LoginIcon />}
               >
                 Sign In
-              </Button>
+              </PrimaryButton>
 
-              <Divider sx={{ my: 3 }}>
-                <Typography variant="body2" color="text.secondary">
-                  OR
-                </Typography>
-              </Divider>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 2,
-                  mb: 3,
-                }}
-              >
-                <IconButton
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 2,
-                    p: 1.5,
-                    color: "#DB4437",
-                  }}
-                >
-                  <GoogleIcon />
-                </IconButton>
-                <IconButton
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 2,
-                    p: 1.5,
-                    color: "#4267B2",
-                  }}
-                >
-                  <FacebookIcon />
-                </IconButton>
-                <IconButton
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 2,
-                    p: 1.5,
-                    color: "#1DA1F2",
-                  }}
-                >
-                  <TwitterIcon />
-                </IconButton>
-              </Box>
+              <GoogleAuthSection onSuccess={handleGoogleSuccess} />
             </form>
           </Paper>
 
